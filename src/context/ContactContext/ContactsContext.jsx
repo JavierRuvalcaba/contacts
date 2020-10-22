@@ -31,7 +31,7 @@ export const ContactsProvider = ({children}) => {
       let newContacts = [...contacts];
 
       if(response.status === 204){
-        const indexToRemove = newContacts.findIndex(c => c.id === id);
+        const indexToRemove = newContacts.findIndex(c => parseInt(c.id) === parseInt(id));
         newContacts.splice(indexToRemove, 1);
       }
 
@@ -51,7 +51,7 @@ export const ContactsProvider = ({children}) => {
       let newContacts = [...contacts];
 
       if(response.status === 200){
-        const indexToUpdate = newContacts.findIndex(c => c.id === id);
+        const indexToUpdate = newContacts.findIndex(c => parseInt(c.id) === parseInt(id));
         newContacts[indexToUpdate] = response.data;
       }
 

@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   row: {
     padding: '5px',
     textAlign: 'left',
+  },
+  img: {
+    width: '128px',
   }
 })
 
@@ -26,7 +29,7 @@ const ContactDetails = (props) => {
   const [ contact, setContact ] = useState(INITIAL_CONTACT);
   
   useEffect(() => {
-    const contactInfo = contacts.find(c => c.id === parseInt(props.match.params.id));
+    const contactInfo = contacts.find(c => parseInt(c.id) === parseInt(props.match.params.id));
     const newContactInfo = contactInfo === undefined ? INITIAL_CONTACT : contactInfo;
     setContact(newContactInfo)
   }, [contacts, props.match.params.id])
@@ -36,7 +39,7 @@ const ContactDetails = (props) => {
       <Paper elevation={3} className={classes.paper}>
         <Grid container>
           <Grid item xs={12} sm={4}>
-            <img src={contact.avatar} alt='img' />
+            <img src={contact.avatar} alt='img' className={classes.img} />
           </Grid>
           <Grid item xs={12} sm={8}>
             <Typography className={classes.row}>First Name: {contact.first_name}</Typography>
