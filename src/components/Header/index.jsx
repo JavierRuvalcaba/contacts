@@ -2,6 +2,8 @@ import React from 'react'
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
+import LinearProgress from '@material-ui/core/LinearProgress';
+import useContacts from '../../context/ContactContext/ContactsContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Header = () => {
-  const classes = useStyles()
+  const { loading } = useContacts();
+  const classes = useStyles();
+
 
   return (
     <div className={classes.root}>
@@ -32,6 +36,7 @@ const Header = () => {
             Contacts - ArkusNexus
           </Typography>
         </Toolbar>
+        { loading ? <LinearProgress color='secondary' /> : null }
       </AppBar>
     </div>
   )

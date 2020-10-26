@@ -1,11 +1,11 @@
 import React, {createContext, useReducer, useContext, useEffect } from 'react';
 import * as reducer from './ContactsReducer';
-import mainAxios from '../../helpers/axios';
+import mainAxios, { axiosMock } from '../../helpers/axios';
 
 const ContactsContext = createContext();
 
 export const ContactsProvider = ({children}) => {
-  const [ contacts, dispatch ] = useReducer(reducer.ContactsReducer, []);
+  const [ contacts, dispatch ] = useReducer(reducer.ContactsReducer, reducer.initialState);
 
   const getContactsList = async (page = 1) => {
     try{
@@ -27,8 +27,9 @@ export const ContactsProvider = ({children}) => {
 
   const deleteContact = async (id) => {
     try{
+      dispatch({ type: reducer.ACTION_SET_LOADING });
       const response = await mainAxios.delete(`/api/users/${id}`);
-      let newContacts = [...contacts];
+      let newContacts = [...contacts.contacts];
 
       if(response.status === 204){
         const indexToRemove = newContacts.findIndex(c => parseInt(c.id) === parseInt(id));
@@ -43,12 +44,15 @@ export const ContactsProvider = ({children}) => {
     catch(e){
       console.log(e);
     }
+    
+    dispatch({ type: reducer.ACTION_SET_LOADING });
   }
   
   const editContact = async (id, contact) => {
     try{
+      dispatch({ type: reducer.ACTION_SET_LOADING });
       const response = await mainAxios.put(`/api/users/${id}`, contact);
-      let newContacts = [...contacts];
+      let newContacts = [...contacts.contacts];
 
       if(response.status === 200){
         const indexToUpdate = newContacts.findIndex(c => parseInt(c.id) === parseInt(id));
@@ -63,12 +67,15 @@ export const ContactsProvider = ({children}) => {
     catch(e){
       console.log(e);
     }
+    dispatch({ type: reducer.ACTION_SET_LOADING });
   }
   
   const addContact = async (contact) => {
     try{
+      dispatch({ type: reducer.ACTION_SET_LOADING });
+      await axiosMock.post('/api/add-image',{ image: contact.avatar });
       const response = await mainAxios.post(`/api/users`, contact);
-      let newContacts = [...contacts];
+      let newContacts = [...contacts.contacts];
       
       if(response.status === 201){
         newContacts = newContacts.concat(response.data);
@@ -82,12 +89,14 @@ export const ContactsProvider = ({children}) => {
     catch(e){
       console.log(e);
     }
+    dispatch({ type: reducer.ACTION_SET_LOADING });
   }
 
   return (
     <ContactsContext.Provider
       value={{
-        contacts,
+        contacts: contacts.contacts,
+        loading: contacts.loading,
         getContactsList,
         deleteContact,
         editContact,

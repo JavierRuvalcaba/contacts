@@ -3,7 +3,7 @@ export const getContactModel = (contact) => {
     first_name: {
       value: contact ? contact.first_name : '',
       label: 'First Name',
-      valid: false,
+      valid: contact ? true : false,
       error: false,
       touched: false,
       msg: '',
@@ -16,7 +16,7 @@ export const getContactModel = (contact) => {
     last_name: {
       value:  contact ? contact.last_name : '',
       label: 'Last Name',
-      valid: false,
+      valid: contact ? true : false,
       error: false,
       touched: false,
       msg: '',
@@ -29,7 +29,7 @@ export const getContactModel = (contact) => {
     email: {
       value:  contact ? contact.email : '',
       label: 'E-mail',
-      valid: false,
+      valid: contact ? true : false,
       error: false,
       touched: false,
       msg: '',
@@ -40,12 +40,16 @@ export const getContactModel = (contact) => {
       }
     },
     avatar: {
-      value:  contact ? contact.avatar : '',
+      value:  '',
       label: 'Photo',
       valid: false,
       error: false,
       touched: false,
-      msg: ''
+      type: 'file',
+      msg: 'Select a valid image (.jpg, .png).',
+      rule: {
+        image: /^.*\.(jpg|gif|png|jpeg)$/,
+      }
     }
   };
 };

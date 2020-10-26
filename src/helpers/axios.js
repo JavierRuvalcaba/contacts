@@ -10,4 +10,11 @@ const mainAxios = axios.create({
   }),
 });
 
+export const axiosMock = axios.create({
+  baseURL: 'https://s3.amazonaws.com/',
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
+});
+
 export default mainAxios;

@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ModalWindow = ({component, open, handleClose}) => {
+const ModalWindow = ({component, open = false, handleClose}) => {
   const classes = useStyles();
 
   return (

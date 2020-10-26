@@ -8,11 +8,11 @@ import {
   Card,
   CardActions,
   CardActionArea,
-  CardMedia,
   CardContent,
   Typography,
   Button 
 } from '@material-ui/core';
+import ImageCard from '../../../../components/ImageCard';
 
 const useStyles = makeStyles({
   root: {
@@ -35,11 +35,7 @@ const ContactCard = ({contact, action}) => {
   return (
     <Card className={classes.root}>
       <CardActionArea onClick={handleClick}>
-        <CardMedia
-          className={classes.media}
-          image={contact.avatar}
-          title={`${contact.first_name} ${contact.last_name}`}
-        />
+        <ImageCard image={contact.avatar} title={`${contact.first_name} ${contact.last_name}`} styleCard='small' />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {`${contact.first_name} ${contact.last_name}`}

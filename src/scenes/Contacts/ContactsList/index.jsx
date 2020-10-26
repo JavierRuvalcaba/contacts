@@ -34,7 +34,7 @@ const ContactsList = () => {
   }
   
   const getContactCards = () => contacts.map(contact => (
-    <Grid item xs={12} sm={6} md={3}>
+    <Grid item key={contact.id} xs={12} sm={6} md={3}>
       <ContactCard contact={contact} key={contact.id} action={() => handleModalOpen(contact)} />
     </Grid>
   ));

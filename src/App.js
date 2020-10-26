@@ -5,6 +5,7 @@ import Contacts from './scenes/Contacts';
 import ContactDetails from './scenes/Contacts/ContactDetails';
 import { ContactsProvider } from './context/ContactContext/ContactsContext';
 import './App.css';
+import './mockAxios.js';
 
 const App = () => {
   return (

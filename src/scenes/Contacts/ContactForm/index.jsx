@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   Grid,
   TextField,
-  CardMedia,
   Button
 } from '@material-ui/core';
 import useContacts from '../../../context/ContactContext/ContactsContext';
 import { validate } from '../../../helpers/validator';
+import ImageCard from '../../../components/ImageCard';
 import { getContactModel } from './contact-model';
 
 const useStyles = makeStyles({
@@ -34,8 +34,37 @@ const ContactForm = ({contact, close, isNewContact}) => {
   const classes = useStyles();
   const { editContact, addContact } = useContacts();
   const [ form, setForm ] = useState(getContactModel(contact));
+  const [ imagePreview, setImagePreview ] = useState(null);
+  const [ disabled, setDisabled ] = useState(true);
+
+  useEffect(() => {
+    const image = contact ? contact.avatar : null;
+    setImagePreview(image);
+  }, [contact]);
+
+  useEffect(() => {
+    const formValid = form.first_name.valid && form.last_name.valid && form.email.valid && imagePreview !== null;
+    setDisabled(!formValid);
+  }, [form, imagePreview])
   
-  const handleFormChange = (field, value) => {
+  const uploadImage = async (e) => {
+    e.preventDefault();
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    if (e.target.files.length === 0) {
+      return;
+    }
+    setImagePreview(file)
+    reader.onloadend = () => {
+      setImagePreview([reader.result]);
+    }
+    reader.readAsDataURL(file);
+  }
+
+  const handleFormChange = async (e) => {
+    const field = e.target.id;
+    let value = e.target.value;
+          
     const newForm = {
       ...form,
     };
@@ -65,8 +94,7 @@ const ContactForm = ({contact, close, isNewContact}) => {
     <Grid item xs={12} key={field.id}>
       <TextField
         {...field}
-        onChange={(e) => { handleFormChange(field.id, e.target.value); }}
-        onFocus={(e) => { handleFormChange(field.id, e.target.value); }}
+        onChange={field.type === 'file' ? uploadImage : handleFormChange}
         style={{ width: '100%', marginTop: '20px' }}
       />
     </Grid>
@@ -77,7 +105,7 @@ const ContactForm = ({contact, close, isNewContact}) => {
       first_name: form.first_name.value,
       last_name: form.last_name.value,
       email: form.email.value,
-      avatar: form.avatar.value,
+      avatar: imagePreview,
     };
 
     if(contact) newContactData.id = contact.id;
@@ -89,20 +117,16 @@ const ContactForm = ({contact, close, isNewContact}) => {
     <Paper elevation={3} className={classes.root}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-            <CardMedia
-              className={classes.media}
-              image={form.avatar.value}
-              title='photo'
-            />
+          <ImageCard image={imagePreview} title='Profile Picture' styleCard='large' />
         </Grid>
         {formInputs}
-        <Grid item xs={12} justify='flex-end'>
+        <Grid item xs={12}>
           <Button
             variant='contained'
             color='primary'
             disableElevation
-            disabled={!(form.first_name.valid && form.last_name.valid && form.email.valid && form.avatar.valid)}
             onClick={handleSave}
+            disabled={disabled}
             className={classes.buttons}
           >
             Save
